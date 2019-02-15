@@ -1,0 +1,21 @@
+{
+  "name": "health_logger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Harrison Latimer",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.14.1",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.11.3",
+    "handlebars-helpers": "^0.10.0",
+    "handlebars.moment": "^1.0.4",
+    "mysql": "^2.16.0",
+    "request": "^2.88.0"
+  }
+}
