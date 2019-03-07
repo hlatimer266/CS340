@@ -1,0 +1,123 @@
+  <div class="container">
+    <h2>Workout Database</h2>
+    <br>
+
+        <button class="btn btn-success" data-toggle="modal" data-target="#myModalAdd">Add New Workout</button>
+        
+    <table class="table table-striped" id="mytable">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Height (FT)</th>
+          <th>Weight (LBS) </th>
+          <th>Workout Name</th>
+          <th>Muscle Group</th>
+          <th>Reps</th>
+          <th>Food Description</th>
+          <th>Calories</th>
+        </tr>
+      </thead>
+      <tbody>
+         {{#each results}}
+        <tr>
+          <td>{{ first_name }}</td>
+          <td>{{ last_name }}</td>
+          <td>{{ height }}</td>
+          <td>{{ weight }}</td>
+          <td>{{ workout }}</td>
+          <td>{{ muscle_group }}</td>
+          <td>{{ reps }}</td>
+          <td>{{ food_desc }}</td>
+          <td>{{ calories }}</td>
+          <td>{{ workout_id }}</td>
+          <td>
+            <td><input type="button" id="edit" value="Edit" onclick="window.location.href='/update_wo?id='+{{this.workout_id}}" /></td>
+        <td><input type="button" id="delete" value="Delete" onclick="deleteRow({{this.workout_id}})"/></td>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+ 
+    <!-- Add Workout-->
+      <form id="workoutForm">
+        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Add New Product</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+              <label>Personal Information</label>
+               <div class="form-group">
+                  <input type="text" id="fname" name="fname" placeholder="Enter Your First Name" maxlength="50" required class="form-control">
+               </div>
+               <div class="form-group">
+                  <input type="text" id="lname" name="fname" placeholder="Enter Your Last Name" maxlength="50" required class="form-control">
+               </div>
+               <div class="form-group">
+                  <input type="number" id="height" name="height" placeholder="Enter Your Height (FT)" step="0.01" min="0" max="1000" required class="form-control">
+               </div>
+               <div class="form-group">
+                  <input type="number" id="weight" name="weight" placeholder="Enter Your Weight (LBS)" step="0.01" min="0" max="1000" required class="form-control">
+               </div>               
+
+              <label>Workout Information</label>
+               <div class="form-group">
+                  <input type="text" id="workoutName" name="workoutName" placeholder="Enter Workout Name" maxlength="50" required class="form-control">
+               </div>
+               <div class="form-group">
+                  <input type="text" id="muscle" name="muscle" placeholder="Enter Target Muscle Group" maxlength="50" required class="form-control">
+               </div>               
+               <div class="form-group">
+                  <input type="number" id="reps" name="reps" placeholder="Enter Number of Reps" min="0" max="1000" required class="form-control">
+               </div>   
+
+              <label>Food Information</label>
+               <div class="form-group">
+                  <input type="text" id="FoodDescription" name="FoodDescription" placeholder="Enter Food Description" maxlength="50" required class="form-control">
+               </div>
+              <div class="form-group">
+                  <input type="number" id="calories" name="calories" placeholder="Enter Total Calories" step="0.01" min="0" max="1000" required class="form-control">
+               </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+               <button type="submit" class="btn btn-primary">Save</button>
+             </div>
+           </div>
+         </div>
+        </div>
+     </form>
+
+    <footer class="page-footer font-small blue">
+      
+      <div class="footer-copyright text-center py-3">Links:
+
+        <br>
+        <a href=/> Go Home | </a>  
+        <a href=/workoutlog> View Workout Log | </a>
+        <a href=/foodLog> View Food Log</a>
+      </div>
+
+    </footer>
+    <script>
+      function deleteRow(id){
+        var req = new XMLHttpRequest();
+        var parms = 'id=';
+        parms += id;
+        
+        console.log(parms)
+     
+        req.open("GET", "http://localhost:62619/delete_wo?"+parms, true);
+        req.send(null);
+        event.preventDefault();
+        window.location.href='/';
+    }
+    </script>
+     

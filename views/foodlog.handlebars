@@ -1,0 +1,83 @@
+  <div class="container">
+    <h2>Food Consumption Log</h2>
+    <br>
+
+
+    <table class="table table-striped" id="mytable">
+      <thead>
+        <tr>
+          <th>Food</th>
+          <th>Meal</th>
+          <th>Food Date and Time</th>
+        </tr>
+      </thead>
+      <tbody>
+         {{#each results}}
+        <tr>
+          <td>{{first_name}}</td>
+          <td>{{last_name}}
+          <td>{{food_desc}}</td>
+          <td>{{calories}}</td>
+          <td>{{eaten_at}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <form>
+ <label>Food Entry</label>
+ <br>
+ <select id="person">
+    {{#each people}}
+      <option>{{first_name}} {{last_name}}</option>
+    {{/each}}
+  </select>
+  <br>
+  <select id="food_desc">
+    {{#each selection}}
+      <option>{{food_desc}}</option>
+    {{/each}}
+  </select>
+  <br>
+  <input type="button" value="Submit" id="submit"/>
+</form>
+ 
+    <footer class="page-footer font-small blue">
+      
+      <div class="footer-copyright text-center py-3">Links:
+
+        <br>
+        <a href=/> Go Home | </a>  
+        <a href=/workoutlog> View Workout Log | </a>
+        <a href=/foodlog> View Food Log</a>
+      </div>
+
+    </footer>
+
+<script>
+    document.getElementById('submit').addEventListener('click', function(event){
+      var req = new XMLHttpRequest();
+
+      var name = document.getElementById('person').value;
+      var res = name.split(" ");
+      var parms = 'first_name=';
+      parms += res[0];
+      parms += '&last_name=' + res[1];
+      parms += '&food_desc=' + document.getElementById('food_desc').value; 
+
+      console.log(parms);
+      
+      
+      req.open("GET", "http://localhost:62619/insert_fl?"+parms, true);
+      req.addEventListener('load',function(){
+      if(req.status >= 200 && req.status < 400){
+        window.location.href='/foodlog';
+      } else {
+        console.log("Error in network request: " + req.statusText);
+      }});
+    req.send(null);
+    event.preventDefault();
+      
+      });
+</script>

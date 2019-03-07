@@ -1,0 +1,58 @@
+<h2>Edit Contents</h2>
+<form>
+	<table id="table">
+		<tr>
+			<th>Name</th>
+			<th>reps</th>
+			<th>weight</th>
+			<th>date </th>
+			<th>lbs</th>
+		</tr>
+		{{#each result}}
+			<input type="hidden" id="id_in" value={{this.id}}
+			<tr>
+				<td id="name"><input type="text" id="name_in" value={{this.name}} /></td>
+				<td id="reps"><input type="text" id="reps_in" value={{this.reps}} /></td>
+				<td id="weight"><input type="text" id="weight_in" value={{this.weight}} /></td>
+				<td id="date"><input type="date" id="date_in" value={{moment this.date format="YYYY-MM-DD"}} /></td>
+				{{#if this.lbs}}
+					<td id="lbs"><input type="checkbox" id="lbs_in" checked></td>
+				{{else}}
+					<td id="lbs"><input type="checkbox"  id="lbs_in"></td>
+    		{{/if}}
+				<td><input type="submit" id="save" value="Save Edits"/></td>
+				<td><input type="button" id="back" value="Back"  onclick="window.location.href='/'"/></td>
+			</tr>
+		{{/each}}
+	</table>
+</form>
+<script>
+	document.getElementById('save').addEventListener('click', function(event){
+      var req = new XMLHttpRequest();
+      var parms = 'name=';
+		  parms += document.getElementById('name_in').value;
+		  parms += '&reps=' + document.getElementById('reps_in').value; 
+		  parms += '&weight=' + document.getElementById('weight_in').value;
+		  parms += '&date=' + document.getElementById('date_in').value;
+			var checkBox = document.getElementById('lbs_in')
+			
+			if(checkBox.checked){
+				parms += "&lbs=1";                                     
+			}
+			else{
+				parms += "&lbs=0";
+			}
+		  parms += '&id=' + document.getElementById('id_in').value;
+
+      req.open("GET", "http://flip3.engr.oregonstate.edu:62619/safe-update?"+parms, true);
+      req.addEventListener('load',function(){
+      if(req.status >= 200 && req.status < 400){
+        window.location.href='/';
+      } else {
+        console.log("Error in network request: " + req.statusText);
+      }});
+    req.send(null);
+    event.preventDefault();
+      
+      });
+</script>
