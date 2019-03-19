@@ -1,5 +1,8 @@
-  
- <label>Workout Entry</label>
+  <div class="container">
+    <h2>Food Consumption Log</h2>
+    <br>
+  <form>
+ <label>Food Entry</label>
  <br>
  <select id="person">
     {{#each people}}
@@ -7,23 +10,26 @@
     {{/each}}
   </select>
   <br>
-  <select id="exercise">
-    {{#each exercises}}
-      <option>{{workout}}</option>
+  <select id="food_desc">
+    {{#each selection}}
+      <option>{{food_desc}}</option>
     {{/each}}
   </select>
   <br>
-  <input type="text" id="reps_in"/>
+  <input type=number id="qty" placeholder="Enter Quantity" />
   <br>
   <input type="date" id="date_in" value={{moment exercised_at format="YYYY-MM-DD"}} />
   <br>
   <input type="button" value="Submit" id="submit"/>
   <input type="button" id="back" value="Back"  onclick="window.location.href='/'"/>
 </form>
+ 
+    <footer class="page-footer font-small blue">
+
+    </footer>
 
 <script>
-
-      document.getElementById('submit').addEventListener('click', function(event){
+    document.getElementById('submit').addEventListener('click', function(event){
       var req = new XMLHttpRequest();
 
       var name = document.getElementById('person').value;
@@ -31,13 +37,14 @@
       var parms = 'first_name=';
       parms += res[0];
       parms += '&last_name=' + res[1];
-      parms += '&exercise=' + document.getElementById('exercise').value;
-      parms += '&reps=' + document.getElementById('reps_in').value;
-      parms += '&date=' + document.getElementById('date_in').value; 
+      parms += '&food_desc=' + document.getElementById('food_desc').value;
+      parms += '&qty=' + document.getElementById('qty').value;
+      parms += '&date=' +  document.getElementById('date_in').value;
 
       console.log(parms);
       
-      req.open("GET", "http://localhost:62619/insert_wo?"+parms, true);
+      
+      req.open("GET", "http://localhost:62619/insert_fl?"+parms, true);
       req.addEventListener('load',function(){
       if(req.status >= 200 && req.status < 400){
         window.location.href='/';
@@ -48,20 +55,4 @@
     event.preventDefault();
       
       });
-
-    function deleteRow(id){
-
-    var req = new XMLHttpRequest();
-    var parms = 'id=';
-    parms += id;
-    console.log(parms);
-  
-    req.open("GET", "http://localhost:62619/deletewol?"+parms, true);
-    req.send(null);
-    event.preventDefault();
-    window.location.href='/workoutlog';
-  }
-
 </script>
-    </footer>
-

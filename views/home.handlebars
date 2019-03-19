@@ -1,10 +1,19 @@
   <div class="container">
     <h2>Workout Database</h2>
+  
+    <label>Select a person and click "Submit" to see logs</label>
     <br>
+    <select id="person">
+    {{#each results}}
+      <option>{{first_name}} {{last_name}}</option>
+    {{/each}}
+  </select>
 
-        <button class="btn btn-success" data-toggle="modal" data-target="#myModalAdd">Add New Workout</button>
-        
+  <input type="button" value="Submit" id="submit"/>
+  <br>
+  <br>
     <table class="table table-striped" id="mytable">
+    <caption style="size"><font size="4"><b>Workout Log</b></font></caption>
       <thead>
         <tr>
           <th>First Name</th>
@@ -14,12 +23,11 @@
           <th>Workout Name</th>
           <th>Muscle Group</th>
           <th>Reps</th>
-          <th>Food Description</th>
-          <th>Calories</th>
+          <th>Date</th>
         </tr>
       </thead>
       <tbody>
-         {{#each results}}
+         {{#each wo_results}}
         <tr>
           <td>{{ first_name }}</td>
           <td>{{ last_name }}</td>
@@ -28,32 +36,61 @@
           <td>{{ workout }}</td>
           <td>{{ muscle_group }}</td>
           <td>{{ reps }}</td>
-          <td>{{ food_desc }}</td>
-          <td>{{ calories }}</td>
-          <td>{{ workout_id }}</td>
-          <td>
-            <td><input type="button" id="edit" value="Edit" onclick="window.location.href='/update_wo?id='+{{this.workout_id}}" /></td>
-        <td><input type="button" id="delete" value="Delete" onclick="deleteRow({{this.workout_id}})"/></td>
-          </td>
+          <td>{{ exercised_at }}</td>
+          <td><input type="button" id="edit" value="Edit" onclick="window.location.href='/update_wo?workout_id='+{{this.workout_id}}" /></td>
+          <td><input type="button" id="delete" value="Delete" onclick="deleteRow({{this.workout_id}})"/></td>
         </tr>
         {{/each}}
       </tbody>
     </table>
   </div>
- 
-    <!-- Add Workout-->
-      <form id="workoutForm">
-        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-         <div class="modal-dialog" role="document">
-           <div class="modal-content">
-             <div class="modal-header">
-               <h5 class="modal-title" id="exampleModalLabel">Add New Product</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                 <span aria-hidden="true">&times;</span>
-               </button>
-             </div>
-             <div class="modal-body">
-              <label>Personal Information</label>
+  <br>
+  <div>
+    <table class="table table-striped" id="mytable">
+    <caption style="size"><font size="4"><b>Food Log</b></font></caption>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Food Desc</th> 
+          <th>Calories</th>
+          <th> Quntity </th>
+          <th>Date</th>
+
+        </tr>
+      </thead>
+      <tbody>
+         {{#each fc_results}}
+        <tr>
+          <td>{{ first_name }}</td>
+          <td>{{ last_name }}</td>
+          <td>{{food_desc}}</td>
+          <td>{{calories}}</td>
+          <td>{{qty}}</td>
+          <td>{{eaten_at}}</td>
+          <td><input type="button" id="edit" value="Edit" onclick="window.location.href='/foodlog?id='+{{id}}" /></td>
+          <td><input type="button" id="delete" value="Delete" onclick="deleteFoodRow({{id}})"/></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <br>
+  <h2>New Log Entry</h2>
+  <fieldset style="width:150px">
+     <label><b>Workout Entry</b></label>
+     <input type="button" id="edit" value="Go" onclick="window.location.href='/workoutlog'" />
+  <br>
+  <br>
+     <label><b>Food Entry</b></label>
+     <input type="button" id="edit" value="Go" onclick="window.location.href='/foodentry'" />
+     </fieldset>
+  <br>
+  <h2>Add New Person, Exercise, or Food</h2>
+<fieldset style="width:150px">
+      <form id="personForm">
+        
+              <label>Add Person</label>
                <div class="form-group">
                   <input type="text" id="fname" name="fname" placeholder="Enter Your First Name" maxlength="50" required class="form-control">
                </div>
@@ -61,12 +98,15 @@
                   <input type="text" id="lname" name="fname" placeholder="Enter Your Last Name" maxlength="50" required class="form-control">
                </div>
                <div class="form-group">
-                  <input type="number" id="height" name="height" placeholder="Enter Your Height (FT)" step="0.01" min="0" max="1000" required class="form-control">
+                  <input type="number" id="height" name="height" placeholder="Enter Your Height (FT)" step="0.01" min="0" max="1000" required class="form-control" style="width:125px">
                </div>
                <div class="form-group">
-                  <input type="number" id="weight" name="weight" placeholder="Enter Your Weight (LBS)" step="0.01" min="0" max="1000" required class="form-control">
-               </div>               
-
+                  <input type="number" id="weight" name="weight" placeholder="Enter Your Weight (LBS)" step="0.01" min="0" max="1000" required class="form-control" style="width:125px">
+               </div> 
+               <button type="submit" class="btn btn-primary" onclick="addNewPerson()">Save</button> 
+        </form>
+        <br>             
+        <form>
               <label>Workout Information</label>
                <div class="form-group">
                   <input type="text" id="workoutName" name="workoutName" placeholder="Enter Workout Name" maxlength="50" required class="form-control">
@@ -74,50 +114,135 @@
                <div class="form-group">
                   <input type="text" id="muscle" name="muscle" placeholder="Enter Target Muscle Group" maxlength="50" required class="form-control">
                </div>               
-               <div class="form-group">
-                  <input type="number" id="reps" name="reps" placeholder="Enter Number of Reps" min="0" max="1000" required class="form-control">
-               </div>   
-
+               <button type="submit" onclick="addNewExercise()" class="btn btn-primary">Save</button>  
+        </form>
+        <br>
+        <form>
               <label>Food Information</label>
                <div class="form-group">
                   <input type="text" id="FoodDescription" name="FoodDescription" placeholder="Enter Food Description" maxlength="50" required class="form-control">
                </div>
               <div class="form-group">
-                  <input type="number" id="calories" name="calories" placeholder="Enter Total Calories" step="0.01" min="0" max="1000" required class="form-control">
+                  <input type="number" id="calories" name="calories" placeholder="Enter Total Calories" step="0.01" min="0" max="1000" required class="form-control" style="width:125px">
                </div>
              </div>
              <div class="modal-footer">
-               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-               <button type="submit" class="btn btn-primary">Save</button>
+               <button type="submit" class="btn btn-primary" onclick="addNewFood()">Save</button>
              </div>
            </div>
          </div>
         </div>
      </form>
-
-    <footer class="page-footer font-small blue">
-      
-      <div class="footer-copyright text-center py-3">Links:
-
-        <br>
-        <a href=/> Go Home | </a>  
-        <a href=/workoutlog> View Workout Log | </a>
-        <a href=/foodLog> View Food Log</a>
-      </div>
-
-    </footer>
+</fieldset>
     <script>
+
+      document.getElementById('submit').addEventListener('click', function(event){
+      var req = new XMLHttpRequest();
+
+      var name = document.getElementById('person').value;
+      var res = name.split(" ");
+      var parms = 'first_name=';
+      parms += res[0];
+      parms += '&last_name=' + res[1];
+      
+      window.location.href='/p_records?'+parms
+      event.preventDefault();
+      });
+
+      function addNewPerson(){
+        var req = new XMLHttpRequest();
+
+        var payload = {first_name:null,last_name:null,height:null,weight:null};
+
+        payload.first_name = document.getElementById('fname').value;
+        payload.last_name = document.getElementById('lname').value;
+        payload.height = document.getElementById('height').value;
+        payload.weight = document.getElementById('weight').value;
+
+        console.log(JSON.stringify(payload));
+
+        req.open('POST', 'http://localhost:62619/insert_person', true);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.addEventListener('load',function(){
+          if(req.status >= 200 && req.status < 400){
+           window.location.href='/'
+          } else {
+            console.log("Error in network request: " + req.statusText);
+          }});
+        req.send(JSON.stringify(payload));
+        event.preventDefault();
+      };
+
+      function addNewExercise(){
+        var req = new XMLHttpRequest();
+
+        var payload = {workout:null,muscle_group:null};
+
+        payload.workout = document.getElementById('workoutName').value;
+        payload.muscle_group = document.getElementById('muscle').value;
+       
+
+        console.log(JSON.stringify(payload));
+
+        req.open('POST', 'http://localhost:62619/insert_exercise', true);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.addEventListener('load',function(){
+          if(req.status >= 200 && req.status < 400){
+           window.location.href='/'
+          } else {
+            console.log("Error in network request: " + req.statusText);
+          }});
+        req.send(JSON.stringify(payload));
+        event.preventDefault();
+      };
+
+      function addNewFood(){
+        var req = new XMLHttpRequest();
+
+        var payload = {food_desc:null,calories:null};
+
+        payload.food_desc = document.getElementById('FoodDescription').value;
+        payload.calories = document.getElementById('calories').value;
+       
+
+        console.log(JSON.stringify(payload));
+
+        req.open('POST', 'http://localhost:62619/insert_food', true);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.addEventListener('load',function(){
+          if(req.status >= 200 && req.status < 400){
+           window.location.href='/'
+          } else {
+            console.log("Error in network request: " + req.statusText);
+          }});
+        req.send(JSON.stringify(payload));
+        event.preventDefault();
+      };
+
       function deleteRow(id){
+
         var req = new XMLHttpRequest();
         var parms = 'id=';
         parms += id;
-        
-        console.log(parms)
-     
-        req.open("GET", "http://localhost:62619/delete_wo?"+parms, true);
+        console.log(parms);
+      
+        req.open("GET", "http://localhost:62619/deletewol?"+parms, true);
         req.send(null);
         event.preventDefault();
         window.location.href='/';
-    }
+      }
+
+      function deleteFoodRow(id){
+
+        var req = new XMLHttpRequest();
+        var parms = 'id=';
+        parms += id;
+        console.log(parms);
+      
+        req.open("GET", "http://localhost:62619/deletefl?"+parms, true);
+        req.send(null);
+        event.preventDefault();
+        window.location.href='/';
+      }
     </script>
      
